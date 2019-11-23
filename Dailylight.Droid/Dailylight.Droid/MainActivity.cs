@@ -1,6 +1,4 @@
-﻿using System;
-using Android;
-using Android.App;
+﻿using Android.App;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.Design.Widget;
@@ -8,6 +6,7 @@ using Android.Support.V4.View;
 using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using Android.Views;
+using System;
 
 namespace Dailylight.Droid
 {
