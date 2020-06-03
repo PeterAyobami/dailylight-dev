@@ -1,0 +1,55 @@
+﻿@using Dailylight.Web.Server.Admin
+
+@if (Show)
+{
+    <div class="alert popup @(IsFloated ? "floated" : null) @Length">
+        <div class="c-alert @AlertType prompt-body">
+            <i class="c-alert__icon fa @AlertTypeIcon"></i>
+            <span>@Message</span>
+            @if (HasRoute)
+            {
+                <span><a href="@Route"><small>@RouteTitle</small></a></span>
+            }
+            @if (HasCommand)
+            {
+                <span><a @onclick="@OnCommand"><small>@CommandTitle</small></a></span>
+            }
+            <span><a @onclick="OnClose"><i class="fa fa-close"></i></a></span>
+        </div>
+    </div>
+}
+
+@code
+{
+    /// <summary>
+    /// Flag indicating <see cref="Show"/> status of the message component
+    /// </summary>
+    [Parameter] public bool Show { get; set; }
+
+    /// <summary>
+    /// <see cref="OnClose"/> call back to close the message component
+    /// </summary>
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    [Parameter] public string Message { get; set; }
+
+    [Parameter] public string AlertType { get; set; }
+
+    [Parameter] public string AlertTypeIcon { get; set; }
+
+    [Parameter] public string Length { get; set; }
+
+    [Parameter] public bool HasCommand { get; set; }
+
+    [Parameter] public EventCallback OnCommand { get; set; }
+
+    [Parameter] public string CommandTitle { get; set; }
+
+    [Parameter] public bool HasRoute { get; set; }
+
+    [Parameter] public bool IsFloated { get; set; }
+
+    [Parameter] public string Route { get; set; }
+
+    [Parameter] public string RouteTitle { get; set; }
+}

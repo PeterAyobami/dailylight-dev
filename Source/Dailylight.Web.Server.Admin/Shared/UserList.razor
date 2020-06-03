@@ -1,0 +1,36 @@
+﻿@namespace Dailylight.Web.Server.Admin
+@using Dailylight.Server.Core
+
+<div class="navbar-dropdown-notifications__item">
+    <a @ondblclick="@OnClick">
+
+        <div class="navbar-dropdown-notifications__item-notify">
+            <div class="d-title-in-list">
+                <!-- <span class="icon ua-icon-comments"></span> -->
+                <strong>@DataModel.Title</strong>
+            </div>
+
+            <!--Anchor scripture-->
+            <span><strong><em>@DataModel.AnchorScripture</em></strong></span>
+
+        </div>
+
+        <!--Devotion date-->
+        <div><span class="u-block u-text-mute u-text-xsmall">@DataModel.Date.ToString("dd MMMM, yyyy")</span></div>
+        <!--<span class="c-message__counter u-hidden-down@desktop">1</span>-->
+    </a>
+</div>
+
+@code
+{
+    [Parameter] public DevotionsDataModel DataModel { get; set; }
+
+    #region Commands
+
+    /// <summary>
+    /// The on-click command to trigger user-selection
+    /// </summary>
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    #endregion
+}

@@ -1,0 +1,74 @@
+﻿@namespace Dailylight.Web.Server.Admin
+
+<header class="c-modal__header">
+    <h1 class="c-modal__title">Confirm Devotion Entry</h1>
+    <span class="c-modal__close" @onclick="@OnCancel">
+        <i class="fa fa-close"></i>
+    </span>
+</header>
+
+<div class="u-width-100" style="height:auto;">
+    <div class="c-modal__subheader">
+        <nav>
+            <div class="c-counter-nav__item">
+                <span class="c-counter-nav__counter"><i class="ti-calendar"></i></span>@Devotion.Date.ToString("dd MMMM, yyyy")
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div class="c-modal__body u-text-center u-pb-small">
+    <div class="row u-justify-center" style="overflow-y: auto; height:60vh; margin-bottom:15px;">
+        <div class="col-sm-12">
+            <h2 class="u-h5 u-mb-small bright-faded">
+                @Devotion.Title<br>
+                <small>@Devotion.AnchorScripture</small>
+            </h2>
+
+            <p class="u-mb-small bright-faded">
+                @Devotion.TextQuote
+            </p>
+
+            <p class="u-text-mute u-mb-xsmall">
+                @Devotion.FirstTextParagraph
+            </p>
+
+            <p class="u-text-mute u-mb-xsmall">
+                @Devotion.SecondTextParagraph
+            </p>
+
+            <p class="u-text-mute u-mb-xsmall">
+                @Devotion.ThirdTextParagraph
+            </p>
+        </div>
+    </div>
+
+    <div class="o-line">
+        <button class="btn btn-secondary mr-auto" @onclick="@OnCancel">Cancel</button>
+
+        <button class="btn btn-success ml-auto" @onclick="@OnConfirm">Confirm</button>
+    </div>
+
+</div>
+
+
+@code
+{
+    /// <summary>
+    /// The devotions data model thats passed in from parent
+    /// </summary>
+    [Parameter]
+    public DevotionsViewModel Devotion { get; set; }
+
+    /// <summary>
+    /// The on confirm event call bask
+    /// </summary>
+    [Parameter]
+    public EventCallback OnConfirm { get; set; }
+
+    /// <summary>
+    /// The on cancel event call back
+    /// </summary>
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+}

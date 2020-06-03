@@ -1,0 +1,195 @@
+﻿@page "/"
+@layout Landing
+@namespace Dailylight.Web.Server.Admin
+@inject ApplicationDbContext Context
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject NavigationManager UriHelper
+@inject RoleManager<IdentityRole> RoleManager
+@inject IJSRuntime Js
+@inject TokenAuthenticationStateProvider TokenAuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@using Dailylight.Server.Core
+@using Microsoft.AspNetCore.Identity
+@using System.Net.Http
+
+
+<div class="container-grid">
+
+    <!-- Login Page Title -->
+    <div class="grid">
+        <div class="col">
+            <div class="logo">
+                <img src="Assets/Images/logo.png" alt="">
+            </div>
+        </div>
+    </div>
+
+    <div class="center-grid">
+
+        <!-- Feedback message -->
+        <FlashMessage AlertType="@FlashMessageThemeInfo.ErrorAlert"
+                      AlertTypeIcon="@FlashMessageThemeInfo.ErrorAlertIcon"
+                      Message="Username or password incorrect"
+                      Show="@mFlashLoginErrorMessage"
+                      Length="@FlashMessageThemeInfo.OneFull"
+                      HasRoute="false"
+                      HasCommand="false"
+                      IsFloated="false"
+                      OnClose="@(() => CloseErrorMessage())" />
+
+        @if (mFlashLoginErrorMessage)
+        {
+            <br />
+            <br />
+            <br />
+        }
+
+        <!-- Form grid -->
+        <div class="form-grid">
+            <EditForm Model="@loginCredentials" OnValidSubmit="@(async () => await SignInAsync(loginCredentials))">
+                <DataAnnotationsValidator />
+
+                <!-- A field grid - Username or Email -->
+                <div class="grid">
+                    <div class="col">
+                        <div class="field-group">
+                            <!-- <label for=""> Username or Email </label> -->
+                            <ValidationMessage For="@(() => loginCredentials.UsernameOrEmail)" />
+                            <InputText @bind-Value="@loginCredentials.UsernameOrEmail" @oninput="@(() => CloseErrorMessage())" name="username" class="form-control" id="username-email" placeholder="Username or Email" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- A field grid - Password -->
+                <div class="grid">
+                    <div class="col">
+                        <div class="field-group">
+                            <!-- <label for=""> Password </label> -->
+                            <ValidationMessage For="@(() => loginCredentials.Password)" />
+                            <input type="password" @bind-value="@loginCredentials.Password" @oninput="(() => CloseErrorMessage())" name="password" class="form-control" id="user-password" placeholder="Password" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- A field grid - Submit -->
+                <div class="grid">
+                    <div class="col">
+                        <div class="field-group">
+                            <!-- <label for=""> Password </label> -->
+                            <!-- TODO: Change class to btn control instead of form-control -->
+                            <ProcessButton ButtonTitle="Sign In" IsRunning="@mLoginIsRunning" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- A field grid - Submit -->
+                <div class="grid">
+                    <div class="col">
+                        <div class="field-group">
+                            <small>Do not have an account? <a href="#">Sign Up</a></small>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    #region Private Members
+
+    private LoginCredentials loginCredentials = new LoginCredentials();
+
+    private HttpContent mHttpContent;
+
+    /// <summary>
+    /// The flag to show the login error message to the user
+    /// </summary>
+    private bool mFlashLoginErrorMessage;
+
+    /// <summary>
+    /// The flag to control the login process status
+    /// </summary>
+    private bool mLoginIsRunning = false;
+
+    #endregion
+
+
+    #region Private Methods
+
+    private async Task SignInAsync(LoginCredentials loginCredentials)
+    {
+        mLoginIsRunning = true;
+
+        // Validate if the user credentials are correct...
+
+        // Is it an email?
+        var isEmail = loginCredentials.UsernameOrEmail.Contains("@");
+
+        // Get the user details
+        var user = isEmail ?
+        // Find by email
+        await UserManager.FindByEmailAsync(loginCredentials.UsernameOrEmail) :
+        // Find by username
+        await UserManager.FindByNameAsync(loginCredentials.UsernameOrEmail);
+
+        // If we failed to find a user...
+        if (user == null)
+        {
+            // Return error message to user
+            mFlashLoginErrorMessage = true;
+            return;
+        }
+
+        // If we got here we have a user...
+        // Let's validate the password
+
+        // Get if password is valid
+        var isValidPassword = await UserManager.CheckPasswordAsync(user, loginCredentials.Password);
+
+        // If the password was wrong
+        if (!isValidPassword)
+        {
+            // Return error message to user
+            mFlashLoginErrorMessage = true;
+            return;
+        }
+
+        // If we got here, we are valid and the user passed the correct login details
+
+        var username = user.UserName;
+        var email = user.Email;
+        var userId = user.Id;
+
+        // Get the user token
+        var token = user.GenerateJwtToken();
+
+        // Set the users token
+        await TokenAuthenticationStateProvider.SetTokenAsync(token);
+
+        var authState = await AuthenticationStateTask;
+
+        var authUser = authState.User;
+
+        if (authUser.Identity.IsAuthenticated)
+            NavigationManager.NavigateTo("/dashboard");
+
+
+        mLoginIsRunning = false;
+    }
+
+    /// <summary>
+    /// The authentication state cascading parameter
+    /// </summary>
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    private void CloseErrorMessage()
+    {
+        mFlashLoginErrorMessage = false;
+    }
+
+    #endregion
+}

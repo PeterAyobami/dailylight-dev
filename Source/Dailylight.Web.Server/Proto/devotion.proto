@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+option csharp_namespace = "Dailylight.Web.Server";
+
+package Devotion;
+
+// The greeting service definition.
+service DevotionServiceHandler {
+  // Sends a message
+  rpc RequestDevotion (DevotionsRequest) returns (DevotionsReply);
+}
+
+// The message rewuest containing the devotion
+message DevotionsRequest {
+
+	// Request token
+	string requestToken = 1;
+}
+
+message DevotionsReply {
+
+	// Devotion id
+	string id = 1;
+
+	// Devotion title
+	string title = 2;
+
+	// Devotion anchor scripture
+	string anchor_scripture = 3;
+
+	// Devotion text quote
+	string text_quote = 4;
+
+	// First text paragraph
+	string first_text_paragraph = 5;
+
+	// Second text paragraph
+	string second_text_paragraph = 6;
+
+	// Third text paragraph
+	string third_text_paragraph = 7;
+
+	// Further reading
+	string further_reading = 8;
+
+	// Memory verse
+	string prayer_point = 9;
+
+	// Prophetic declaration
+	string prophetic_declaration = 10;
+
+	// Image url
+	string image_url = 11;
+
+	// Devotion day
+	string devotion_day = 12;
+
+	// Devotion month
+	string devotion_month = 13;
+
+	// Devotion year
+	string devotion_year = 14;
+
+	// Devotion date
+	string date = 15;
+}

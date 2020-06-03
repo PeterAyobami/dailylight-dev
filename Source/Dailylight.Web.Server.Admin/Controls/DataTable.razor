@@ -1,0 +1,38 @@
+﻿<tr class="c-table__row @LowStock ? c-table__row--danger : null">
+    <td class="c-table__cell">
+        UX Consulting
+        <small class="u-block u-text-mute">Tapdaq</small>
+    </td>
+
+    <td class="c-table__cell">
+        23th Dec, 18
+        <small class="u-block u-text-danger">Overdue</small>
+    </td>
+
+    <td class="c-table__cell">
+        $2,500
+        <small class="u-block u-text-mute">Paid</small>
+    </td>
+
+    <td class="c-table__cell">
+        <i class="fa fa-circle-o u-color-success u-mr-xsmall"></i>Finishing
+    </td>
+
+    <td class="c-table__cell u-text-right">
+        <div class="c-dropdown dropdown">
+            <button class="c-btn c-btn--secondary has-dropdown dropdown-toggle" id="dropdownMenuButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
+
+            <div class="c-dropdown__menu dropdown-menu" aria-labelledby="dropdownMenuButton4">
+                <a class="c-dropdown__item dropdown-item" href="#">Manage</a>
+                <a class="c-dropdown__item dropdown-item" href="#" type="button" data-toggle="modal" data-target="#modal8">New Stock</a>
+                <a class="c-dropdown__item dropdown-item" href="#" type="button" data-toggle="modal" data-target="#modal8">Quick Modify</a>
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+@code
+{
+    [Parameter] public bool LowStock { get; set; }
+}

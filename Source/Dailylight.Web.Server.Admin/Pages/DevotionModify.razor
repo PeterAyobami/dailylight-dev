@@ -1,0 +1,221 @@
+﻿@page "/devotion-modify/{id}"
+@attribute [Authorize]
+@namespace Dailylight.Web.Server.Admin
+@using Dailylight.Server.Core
+@inherits DevotionModifyPageViewModel
+
+
+<PageHeader Title="Devotions Update"
+            HasCommand="false"
+            HasMargin="true"
+            HasAppNotification="false"
+            HasUserNotification="false" />
+
+
+<!--Page On Process Spinner-->
+<PageLoadingSpinner IsLoading="false" />
+
+<div class="container">
+    <!-- Inventory data visualization -->
+
+
+    <span class="c-divider has-text u-mb-medium">Modify Devotion</span>
+
+    <!-- New Product Section -->
+    <div class="row u-mb-large">
+        <div class="col-12">
+            <div class="">
+
+                <div class="new-product-entry" id="">
+                    <div class="c-tabs__pane active entry-grid">
+
+                        <h4 class="m-b-30 m-t-0">Modify Devotion</h4>
+
+                        <!-- Feedback message -->
+                        <FlashMessage AlertType="@FlashMessageThemeInfo.SuccsesAlert"
+                                      AlertTypeIcon="@FlashMessageThemeInfo.SuccsesAlertIcon"
+                                      Message="Devotion has been added successfully"
+                                      Show="FlashDevotionModifiedSuccess"
+                                      Length="@FlashMessageThemeInfo.OneHalf"
+                                      HasRoute="true"
+                                      Route="/devotions"
+                                      CommandTitle="View Devotion"
+                                      IsFloated="false"
+                                      RouteTitle="View Devotion"
+                                      OnClose="CloseFlashMessages" />
+
+                        <EditForm Model="mDevotion" OnValidSubmit="@(() => ShowingDevotionModifyConfirmationDialog = true)">
+                            <DataAnnotationsValidator />
+
+                            <!--Date and title-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="devotion-date">Date</label>
+                                        <ValidationMessage For="@(() => mDevotion.Date)" />
+                                        <InputDate name="devotion-date" class="form-control" @bind-Value="@mDevotion.Date" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="devotion-title">Title</label>
+                                        <ValidationMessage For="@(() => mDevotion.Title)" />
+                                        <InputText @bind-Value="@mDevotion.Title" class="form-control" name="devotion-title"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Anchor scripture and further reading-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="anchor-scripture">Anchor Scripture</label>
+                                        <ValidationMessage For="@(() => mDevotion.AnchorScripture)" />
+                                        <InputText name="anchor-scripture" class="form-control" @bind-Value="@mDevotion.AnchorScripture" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="further-reading">Further Reading</label>
+                                        <ValidationMessage For="@(() => mDevotion.FurtherReading)" />
+                                        <InputText type="text" name="further-reading" id="further-reading" class="form-control" @bind-Value="@mDevotion.FurtherReading" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Text quote-->
+                            <div class="form-group">
+                                <label for="text-quote">Text Quote</label>
+                                <ValidationMessage For="@(() => mDevotion.TextQuote)" />
+                                <InputTextArea name="text-quote" id="text-quote" class="form-control" rows="4" @bind-Value="@mDevotion.TextQuote"></InputTextArea>
+                            </div>
+
+                            <!--First paragraph-->
+                            <div class="form-group">
+                                <label for="first-text-paragraph">First Text Paragraph</label>
+                                <ValidationMessage For="@(() => mDevotion.FirstTextParagraph)" />
+                                <InputTextArea name="first-text-paragraph" id="first-text-paragraph" class="form-control" rows="7" @bind-Value="@mDevotion.FirstTextParagraph"></InputTextArea>
+                            </div>
+
+                            <!--Second pararaph-->
+                            <div class="form-group">
+                                <label for="second-text-paragraph">Second Text Paragraph</label>
+                                <ValidationMessage For="@(() => mDevotion.SecondTextParagraph)" />
+                                <InputTextArea name="second-text-paragraph" id="second-text-paragraph" class="form-control" rows="7" @bind-Value="@mDevotion.SecondTextParagraph"></InputTextArea>
+                            </div>
+
+                            <!--Third paragraph-->
+                            <div class="form-group">
+                                <label for="third-text-paragraph">Third Text Paragraph</label>
+                                <ValidationMessage For="@(() => mDevotion.ThirdTextParagraph)" />
+                                <InputTextArea name="third-text-paragraph" id="third-text-paragraph" class="form-control" rows="7" @bind-Value="@mDevotion.ThirdTextParagraph"></InputTextArea>
+                            </div>
+
+
+                            <!--Image url and memory verse-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="image-url">Select Image</label>
+                                        <ValidationMessage For="@(() => mDevotion.ImageUrl)" />
+                                        <input type="file" name="image-url" id="image-url" class="form-control" @bind-value="mDevotion.ImageUrl" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="memory-verse">Memory Verse</label>
+                                        <ValidationMessage For="@(() => mDevotion.MemoryVerse)" />
+                                        <InputText name="memory-verse" id="memory-verse" class="form-control" @bind-Value="@mDevotion.MemoryVerse" />
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="prayer-point">Prayer Point</label>
+                                        <ValidationMessage For="@(() => mDevotion.PrayerPoint)" />
+                                        <InputText name="prayer-point" id="prayer-point" class="form-control" @bind-Value="@mDevotion.PrayerPoint" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="prophetic-declaration">Prophetic Declaration</label>
+                                        <ValidationMessage For="@(() => mDevotion.PropheticDeclaration)" />
+                                        <InputText name="prophetic-declaration" id="prophetic-declaration" class="form-control" @bind-Value="@mDevotion.PropheticDeclaration" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="submit-ctrl row">
+                                <button type="submit" name="add-product" value="add-product" class="btn btn-primary waves-effect waves-light">Submit</button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--Dialogs-->
+<!--Devotion entry confirmation dialog-->
+<TemplatedDialog Show="ShowingDevotionModifyConfirmationDialog"
+                 Length="@DialogThemeInfo.StandardLength">
+    <DevotionEntryConfirmationDialog OnCancel="@(() => ShowingDevotionModifyConfirmationDialog = false)"
+                                     OnConfirm="@(async () => await UpdateDevotionAsync(mDevotion))"
+                                     Devotion="mDevotion" />
+</TemplatedDialog>
+
+@code
+{
+    #region Private Members
+
+    /// <summary>
+    /// The devotion data model
+    /// </summary>
+    private DevotionsViewModel mDevotion = new DevotionsViewModel();
+    private DevotionsDataModel mDevotionData;
+
+    #endregion
+
+
+    #region Parameters
+
+    /// <summary>
+    /// The id parameter thats passed in
+    /// </summary>
+    [Parameter]
+    public string Id { get; set; }
+
+    #endregion
+
+
+    #region Overrides
+
+    /// <summary>
+    /// The method that is executed when the page loads
+    /// </summary>
+    /// <returns></returns>
+    protected async override Task OnInitializedAsync()
+    {
+        mDevotionData = await Context.Devotions.FindAsync(Id);
+
+        mDevotion.Id = mDevotionData.Id;
+        mDevotion.Date = mDevotionData.Date;
+        mDevotion.Title = mDevotionData.Title;
+        mDevotion.AnchorScripture = mDevotionData.AnchorScripture;
+        mDevotion.FurtherReading = mDevotionData.FurtherReading;
+        mDevotion.TextQuote = mDevotionData.TextQuote;
+        mDevotion.FirstTextParagraph = mDevotionData.FirstTextParagraph;
+        mDevotion.SecondTextParagraph = mDevotionData.SecondTextParagraph;
+        mDevotion.ThirdTextParagraph = mDevotionData.ThirdTextParagraph;
+        mDevotion.ImageUrl = string.Empty;
+        mDevotion.MemoryVerse = mDevotionData.MemoryVerse;
+        mDevotion.PrayerPoint = mDevotionData.PrayerPoint;
+        mDevotion.PropheticDeclaration = mDevotionData.PropheticDeclaration;
+    }
+
+    #endregion
+}

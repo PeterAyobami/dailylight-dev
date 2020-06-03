@@ -1,0 +1,6 @@
+INFORMATION: [2020-02-07 01:56:50] Now listening on: http://localhost:5000
+INFORMATION: [2020-02-07 01:56:50] Now listening on: https://localhost:5001
+INFORMATION: [2020-02-07 01:56:50] Application started. Press Ctrl+C to shut down.
+INFORMATION: [2020-02-07 01:56:50] Hosting environment: Production
+INFORMATION: [2020-02-07 01:56:50] Content root path: E:\git\dailylight-dev\Source\Dailylight.Web.Server\Published
+INFORMATION: [2020-02-07 01:57:31] Application is shutting down...

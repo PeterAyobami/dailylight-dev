@@ -1,0 +1,187 @@
+﻿@page "/editions"
+@attribute [Authorize]
+@namespace Dailylight.Web.Server.Admin
+@inherits EditionPageViewModel
+@using System.Threading;
+@using System.Threading.Tasks
+@using System.Globalization
+
+<PageHeader Title="Devotion Editions"
+            HasCommand="false"
+            HasMargin="true"
+            HasAppNotification="false"
+            HasUserNotification="false" />
+
+
+<!--Page On Process Spinner-->
+<PageLoadingSpinner IsLoading="false" />
+
+<div class="container">
+    <!-- Inventory data visualization -->
+
+
+    <span class="c-divider has-text u-mb-medium">New Edition</span>
+
+    <!-- New Product Section -->
+    <div class="row u-mb-large">
+        <div class="col-12">
+            <div class="">
+
+                <div class="new-product-entry" id="">
+                    <div class="c-tabs__pane active entry-grid">
+
+                        <h4 class="m-b-30 m-t-0">Add New Edition</h4>
+
+                        <!-- Feedback message -->
+                        <FlashMessage AlertType="@FlashMessageThemeInfo.SuccsesAlert"
+                                      AlertTypeIcon="@FlashMessageThemeInfo.SuccsesAlertIcon"
+                                      Message="Edition has been added successfully"
+                                      Show="FlashEditionAddedSuccess"
+                                      Length="@FlashMessageThemeInfo.OneHalf"
+                                      HasRoute="true"
+                                      Route="/editions"
+                                      IsFloated="false"
+                                      OnClose="CloseFlashMessages" />
+
+                        <EditForm Model="EditionsViewModel" OnValidSubmit="@(async() => await AddEditionAsync(EditionsViewModel))">
+                            <DataAnnotationsValidator />
+
+                            <!--Edition term and year-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="edition-term">Edition Term</label>
+                                        <ValidationMessage For="@(() => EditionsViewModel.Edition)" />
+                                        <InputNumber name="edition-term" class="form-control" @bind-Value="@EditionsViewModel.Edition" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="edition-year">Edition Year</label>
+                                        <ValidationMessage For="@(() => EditionsViewModel.EditionYear)" />
+                                        <InputText name="edition-year" id="edition-year" class="form-control" @bind-Value="@EditionsViewModel.EditionYear" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Edition price and image url-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="edition-price">Edition Price</label>
+                                        <ValidationMessage For="@(() => EditionsViewModel.EditionPrice)" />
+                                        <InputNumber name="edition-price" class="form-control" @bind-Value="@EditionsViewModel.EditionPrice" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="image-url">Select Image</label>
+                                        <ValidationMessage For="@(() => EditionsViewModel.ImageUrl)" />
+                                        <input type="file" name="image-url" id="image-url" class="form-control" @bind-value="@EditionsViewModel.ImageUrl" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Add Edition-->
+                            <div class="submit-ctrl row">
+                                <button type="submit" name="add-product" value="add-product" class="btn btn-primary waves-effect waves-light">Submit</button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <span class="c-divider has-text u-mb-medium">Editions</span>
+
+    <div class="row u-mb-large" style="margin-top: 24px;">
+        <div class="col-sm-12">
+            <div class="c-table-responsive@desktop">
+                <table class="c-table">
+
+                    <caption class="c-table__title">
+                        All Editions <small>@Editions.Count() Editions</small>
+
+                        <a class="c-table__title-action" href="#">
+                            <i class="fa fa-cloud-download"></i>
+                        </a>
+                    </caption>
+
+                    <thead class="c-table__head c-table__head--slim">
+                        <tr class="c-table__row">
+                            <th class="c-table__cell c-table__cell--head">Edition Year</th>
+                            <th class="c-table__cell c-table__cell--head">Edition Term</th>
+                            <th class="c-table__cell c-table__cell--head">Price</th>
+                            <th class="c-table__cell c-table__cell--head">
+                                <span class="u-hidden-visually">Edit</span>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <!--If there are no products in the inventory...-->
+                        @if (!Editions.Any())
+                        {
+                            <!--Present empty row-->
+                            <tr class="c-table__row">
+                                <td class="c-table__cell" colspan="6">
+                                    <center>
+                                        There are no devotion editions!
+                                    </center>
+                                </td>
+                            </tr>
+                        }
+
+                        <!--Otherwise, for each product in inventory...-->
+                        @foreach (var edition in Editions)
+                        {
+                            <!--Product product data and info-->
+                            <tr class="c-table__row">
+                                <td class="c-table__cell">
+                                    <strong>Daily Light @edition.EditionYear</strong>
+                                    <!--<small class="u-block u-text-mute"><em>Category(Item)</em></small>-->
+                                </td>
+
+                                <td class="c-table__cell">
+                                    <span class="c-badge c-badge--small">@edition.Edition</span>
+                                    <!--<small class="u-block u-text-mute">RemainingItems(Item)</small>-->
+                                </td>
+
+                                <td class="c-table__cell">
+                                    <strong>@edition.EditionPrice</strong>
+                                </td>
+
+                                <td class="c-table__cell u-text-right">
+                                    <a class="btn btn-default" href=""><i class="ti-receipt"></i> Edit</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <nav class="c-pagination u-mt-small u-justify-between">
+                <a class="c-pagination__control" href="#">
+                    <i class="fa fa-caret-left"></i>
+                </a>
+
+                <p class="c-pagination__counter">Page 2 of 3</p>
+
+                <a class="c-pagination__control" href="#">
+                    <i class="fa fa-caret-right"></i>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+</div>
+
+@code
+{ 
+    protected async override Task OnInitializedAsync()
+    {
+        Editions = await GetEditionsAsync();
+    }
+}

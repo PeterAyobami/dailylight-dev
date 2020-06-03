@@ -6,17 +6,26 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <title>Home | Dailylight Media</title>
+    <meta name="description" content="Dashboard UI Kit">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dailylight.Web.Server.Admin</title>
-    <base href="~/" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/site.css" rel="stylesheet" />
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="~/Assets/Css/Style.css">
 </head>
-<body>
+<body class="o-page">
     <app>
-        @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
+        @(await Html.RenderComponentAsync<App>(RenderMode.Server))
     </app>
 
     <script src="_framework/blazor.server.js"></script>
+
+    <!--Scripts-->
+    <script src="~/Assets/Js/Script.js"></script>
 </body>
 </html>

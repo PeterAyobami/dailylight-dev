@@ -1,5 +1,323 @@
-﻿@page "/"
+﻿@page "/dashboard"
+@namespace Dailylight.Web.Server.Admin
+@inherits HomePageViewModel
+@inject UserManager<ApplicationUser> UserManager
+@attribute [Authorize]
+@using Dna
+@using System;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using System.Globalization
+@using Dailylight.Server.Core
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Authentication
 
-<h1>Hello, world!</h1>
+<PageHeader Title="#Dailylight"
+            HasCommand="false"
+            HasMargin="true"
+            HasAppNotification="false"
+            HasUserNotification="false" />
 
-Welcome to your new app.
+<div class="container-fluid">
+
+    <span class="c-divider has-text u-mb-medium">General Overview Analysis</span>
+
+    <div class="row">
+        <!--Last month sales review analysis-->
+        <div class="col-xl-4">
+            <div class="c-graph-card" data-mh="graph-cards">
+                <div class="c-graph-card__content">
+                    <h3 class="c-graph-card__title">Total Users</h3>
+                    <p class="c-graph-card__date">Total users on the Daily Light Devotional platform</p>
+                    <h4 class="c-graph-card__number">@mTotalUsersCount</h4>
+                    <br />
+                    <p class="c-graph-card__status">
+                        <small>
+                            <strong>
+                                @mPurchasedEditionRatio have purchased Daily Light 2020
+                            </strong>
+                        </small>
+                    </p>
+                </div>
+
+                <div class="c-graph-card__chart">
+                    <!--<canvas id="js-chart-payout" width="300" height="74"></canvas>-->
+                </div>
+            </div>
+        </div>
+
+        <!--Current month sales analysis-->
+        <div class="col-xl-4">
+            <div class="c-graph-card" data-mh="graph-cards">
+                <div class="c-graph-card__content">
+                    <h3 class="c-graph-card__title">Edition Purchases</h3>
+                    <p class="c-graph-card__date">@mCurrentEdition<sup>st</sup> Edition</p>
+                    <h4 class="c-graph-card__number">
+                        <!--Sum up the all purchased editions-->
+                        @mEditionsSum
+                    </h4>
+                    <br />
+                    <p class="c-graph-card__status">
+                        <small>
+                            <strong>
+                                @mEditionPurchasesCount soft copies purchases at @mEditionsSum
+                            </strong>
+                        </small>
+                    </p>
+                </div>
+
+                <div class="c-graph-card__chart">
+                    <!--canvas id="js-chart-earnings" width="300" height="74"></canvas>-->
+                </div>
+            </div>
+        </div>
+
+        <!---->
+        <div class="col-xl-4">
+            <div class="c-progress-card" data-mh="graph-cards">
+                <h3 class="c-progress-card__title">All Tasks Overview</h3>
+                <p class="c-progress-card__date">Next 4 Weeks</p>
+
+                <div class="c-progress-card__item">
+                    <div class="c-progress-card__label">Week 3</div>
+
+                    <div class="c-progress-card__progress c-progress c-progress--small">
+                        <div class="c-progress__bar u-bg-success" style="width:100%;">
+                            <div class="c-progress__bar u-bg-fancy" style="width: 70%">
+                                <div class="c-progress__bar u-bg-info" style="width: 50%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- // .c-progress-card__item -->
+
+                <div class="c-progress-card__item">
+                    <div class="c-progress-card__label">Week 4</div>
+
+                    <div class="c-progress-card__progress c-progress c-progress--small">
+                        <div class="c-progress__bar u-bg-success" style="width:100%;">
+                            <div class="c-progress__bar u-bg-fancy" style="width: 70%">
+                                <div class="c-progress__bar u-bg-info" style="width: 50%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- // .c-progress-card__item -->
+
+                <div class="c-progress-card__item">
+                    <div class="c-progress-card__label">Week 5</div>
+
+                    <div class="c-progress-card__progress c-progress c-progress--small">
+                        <div class="c-progress__bar u-bg-success" style="width:100%;">
+                            <div class="c-progress__bar u-bg-fancy" style="width: 70%">
+                                <div class="c-progress__bar u-bg-info" style="width: 50%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- // .c-progress-card__item -->
+
+                <div class="c-progress-card__item">
+                    <div class="c-progress-card__label">Week 6</div>
+
+                    <div class="c-progress-card__progress c-progress c-progress--small">
+                        <div class="c-progress__bar u-bg-success" style="width:100%;">
+                            <div class="c-progress__bar u-bg-fancy" style="width: 70%">
+                                <div class="c-progress__bar u-bg-info" style="width: 50%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- // .c-progress-card__item -->
+
+                <ul class="c-progress-card__legends">
+                    <li class="u-text-mute u-text-xsmall">
+                        <i class="c-progress-card__legend u-bg-fancy"></i>Progress
+                    </li>
+                    <li class="u-text-mute u-text-xsmall">
+                        <i class="c-progress-card__legend u-bg-info"></i>Due
+                    </li>
+                    <li class="u-text-mute u-text-xsmall">
+                        <i class="c-progress-card__legend u-bg-success"></i>OA
+                    </li>
+                    <li class="u-text-mute u-text-xsmall">
+                        <i class="c-progress-card__legend u-bg-danger"></i>Delegated
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <span class="c-divider has-text u-mb-medium">Feedback Reports</span>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="c-card c-card--responsive u-mb-medium">
+                <div class="c-card__header c-card__header--transparent o-line">
+                    <h5 class="c-card__title">Bug Reports</h5>
+                    <!--<a class="c-card__meta" href="#">View all invoices</a>-->
+                </div>
+
+                <table class="c-table u-border-zero">
+                    <tbody>
+                        @if (mBugReportsFeedbacks != null)
+                        {
+                            @foreach (var report in mBugReportsFeedbacks)
+                            {
+                                <tr class="c-table__row u-border-top-zero">
+                                    <td class="c-table__cell u-text-mute">
+                                        <div>
+                                            <strong>
+                                                @report.FeedbackTitle
+                                            </strong>
+                                        </div>
+
+                                        <div>
+                                            <em>@report.FeedbackMessage</em>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr class="c-table__row u-border-top-zero">
+                                <td class="c-table__cell u-text-mute" colspan="3">
+                                    <center>
+                                        No bug reports
+                                    </center>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="c-card c-card--responsive u-mb-medium">
+                <div class="c-card__header c-card__header--transparent o-line">
+                    <h5 class="c-card__title">Suggestion Feedbacks</h5>
+                    <!--<a class="c-card__meta" href="#">View all all tasks</a>-->
+                </div>
+
+                <table class="c-table u-border-zero">
+                    <tbody>
+                        @if (mSuggestionReportsFeedback != null)
+                        {
+                            @foreach (var report in mSuggestionReportsFeedback)
+                            {
+                                <tr class="c-table__row u-border-top-zero">
+                                    <td class="c-table__cell u-text-mute">
+                                        <div>
+                                            <strong>
+                                                @report.FeedbackTitle
+                                            </strong>
+                                        </div>
+                                        <div>
+                                            <em>@report.FeedbackMessage</em>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr class="c-table__row u-border-top-zero">
+                                <td class="c-table__cell u-text-mute" colspan="3">
+                                    <center>
+                                        No suggestion feedbacks
+                                    </center>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@code
+{
+    #region Private Members
+
+    private string mEditionsSum;
+
+    private string mCurrentEdition;
+
+    /// <summary>
+    /// The authentication state cascading parameter
+    /// </summary>
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    #endregion
+
+
+    #region Overrides
+
+    /// <summary>
+    /// The methods that is run when the page first loads
+    /// </summary>
+    protected override void OnInitialized()
+    {
+
+    }
+
+    /// <summary>
+    /// The method that is run when the page first loads
+    /// </summary>
+    /// <returns></returns>
+    protected override async Task OnInitializedAsync()
+    {
+        // If admin user does not exist
+        if (!await UserManager.Users.AnyAsync(x => x.UserName == "admin"))
+        {
+            await UserManager.CreateAsync(new ApplicationUser
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserName = "admin",
+                Email = "admin@dailylight.media"
+            }, "dailylightadmin");
+        }
+
+        mTotalUsersCount = await GetTotalUsersCountAsync();
+
+        mPurchasedEditions = await GetEditionPurchasesAsync();
+
+        mBugReportsFeedbacks = await GetUsersBugReportsAsync();
+
+        mEditionPurchasesCount = await GetEditionPurchasesCountAsync();
+
+        mSuggestionReportsFeedback = await GetUsersFeatureSuggestionsAsync();
+
+        mPurchasedEditionRatio = await GetEditionPurchasesRatio();
+
+        mCurrentEdition = GetCurrentEdition();
+        mEditionsSum = EditionsSum();
+    }
+
+
+    /// <summary>
+    /// The method to verify if a user is logged in
+    /// </summary>
+    /// <returns></returns>
+    private async Task VerifyAuthentication()
+    {
+        var authState = await AuthenticationStateTask;
+
+        var user = authState.User;
+
+        if (!user.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+            DI.ClaimsPrincipal = user;
+    }
+
+    #endregion
+}

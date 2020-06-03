@@ -17,7 +17,10 @@ using Dailylight.Core;
 
 namespace Dailylight.Droid
 {
-    [Activity(Label = "Daily Light", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+    [Activity(Label = "Daily Light", 
+        Theme = "@style/AppTheme.NoActionBar", 
+        MainLauncher = true, 
+        ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
         protected override async void OnCreate(Bundle savedInstanceState)

@@ -1,0 +1,176 @@
+@page "/devotion-entry"
+@attribute [Authorize]
+@namespace Dailylight.Web.Server.Admin
+@inherits DevotionEntryPageViewModel
+@using System.Threading;
+@using System.Threading.Tasks
+@using System.Globalization
+
+<PageHeader Title="Devotions Entry"
+            HasCommand="false"
+            HasMargin="true"
+            HasAppNotification="false"
+            HasUserNotification="false" />
+
+
+<!--Page On Process Spinner-->
+<PageLoadingSpinner IsLoading="false" />
+
+<div class="container">
+    <!-- Inventory data visualization -->
+    
+    
+    <span class="c-divider has-text u-mb-medium">New Devotion</span>
+
+    <!-- New Product Section -->
+    <div class="row u-mb-large">
+        <div class="col-12">
+            <div class="">
+
+                <div class="new-product-entry" id="">
+                    <div class="c-tabs__pane active entry-grid">
+
+                        <h4 class="m-b-30 m-t-0">Add New Devotion</h4>
+
+                        <!-- Feedback message -->
+                        <FlashMessage AlertType="@FlashMessageThemeInfo.SuccsesAlert"
+                                      AlertTypeIcon="@FlashMessageThemeInfo.SuccsesAlertIcon"
+                                      Message="Devotion has been added successfully"
+                                      Show="FlashDevotionAddedSuccess"
+                                      Length="@FlashMessageThemeInfo.OneHalf"
+                                      HasRoute="true"
+                                      Route="/devotions"
+                                      CommandTitle="View Devotion"
+                                      IsFloated="false"
+                                      RouteTitle="View Devotion"
+                                      OnClose="CloseFlashMessages" />
+
+                        <EditForm Model="Devotions" OnValidSubmit="@(() => ShowingDevotionEntryConfirmationDialog = true)">
+                            <DataAnnotationsValidator />
+
+                            <!--Date and title-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="product-name">Date</label>
+                                        <ValidationMessage For="@(() => Devotions.Date)" />
+                                        <InputDate name="devotion-title" class="form-control" @bind-Value="@Devotions.Date" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="product-category">Title</label>
+                                        <ValidationMessage For="@(() => Devotions.Title)" />
+                                        <InputText name="anchor-scripture" id="anchor-scripture" class="form-control" @bind-Value="@Devotions.Title" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Anchor scripture and further reading-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="product-name">Anchor Scripture</label>
+                                        <ValidationMessage For="@(() => Devotions.AnchorScripture)" />
+                                        <InputText name="devotion-title" class="form-control" @bind-Value="@Devotions.AnchorScripture" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="product-category">Further Reading</label>
+                                        <ValidationMessage For="@(() => Devotions.FurtherReading)" />
+                                        <InputText name="anchor-scripture" id="anchor-scripture" class="form-control" @bind-Value="@Devotions.FurtherReading" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Text quote-->
+                            <div class="form-group">
+                                <label for="product-description">Text Quote</label>
+                                <ValidationMessage For="@(() => Devotions.TextQuote)" />
+                                <InputTextArea name="first-text-paragraph" id="first-text-paragraph" class="form-control" rows="4" @bind-Value="@Devotions.TextQuote"></InputTextArea>
+                            </div>
+
+                            <!--First paragraph-->
+                            <div class="form-group">
+                                <label for="product-description">First Text Paragraph</label>
+                                <ValidationMessage For="@(() => Devotions.FirstTextParagraph)" />
+                                <InputTextArea name="first-text-paragraph" id="first-text-paragraph" class="form-control" rows="7" @bind-Value="@Devotions.FirstTextParagraph"></InputTextArea>
+                            </div>
+
+                            <!--Second pararaph-->
+                            <div class="form-group">
+                                <label for="product-description">Second Text Paragraph</label>
+                                <ValidationMessage For="@(() => Devotions.SecondTextParagraph)" />
+                                <InputTextArea name="first-text-paragraph" id="first-text-paragraph" class="form-control" rows="7" @bind-Value="@Devotions.SecondTextParagraph"></InputTextArea>
+                            </div>
+
+                            <!--Third paragraph-->
+                            <div class="form-group">
+                                <label for="product-description">Third Text Paragraph</label>
+                                <ValidationMessage For="@(() => Devotions.ThirdTextParagraph)" />
+                                <InputTextArea name="first-text-paragraph" id="first-text-paragraph" class="form-control" rows="7" @bind-Value="@Devotions.ThirdTextParagraph"></InputTextArea>
+                            </div>
+
+
+                            <!--Image url and memory verse-->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="product-sku">Select Image</label>
+                                        <ValidationMessage For="@(() => Devotions.ImageUrl)"/>
+                                        <input type="file" name="image-url" id="image-url" class="form-control" @bind-value="@Devotions.ImageUrl"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="product-quantity">Memory Verse</label>
+                                        <ValidationMessage For="@(() => Devotions.MemoryVerse)" />
+                                        <InputText name="further-reading" id="further-reading" class="form-control" @bind-Value="@Devotions.MemoryVerse" />
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="product-cost">Prayer Point</label>
+                                        <ValidationMessage For="@(() => Devotions.PrayerPoint)" />
+                                        <InputText name="memory-verse" id="memory-verse" class="form-control" @bind-Value="@Devotions.PrayerPoint" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="product-price">Prophetic Declaration</label>
+                                        <ValidationMessage For="@(() => Devotions.PropheticDeclaration)" />
+                                        <InputText name="prophetic-declaration" id="prophetic-declaration" class="form-control" @bind-Value="@Devotions.PropheticDeclaration" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="submit-ctrl row">
+                                <button type="submit" name="add-product" value="add-product" class="btn btn-primary waves-effect waves-light">Submit</button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--Dialogs-->
+
+<!--Devotion entry confirmation dialog-->
+<TemplatedDialog Show="ShowingDevotionEntryConfirmationDialog"
+                 Length="@DialogThemeInfo.StandardLength">
+    <DevotionEntryConfirmationDialog OnCancel="@(() => ShowingDevotionEntryConfirmationDialog = false)"
+                                     OnConfirm="@(async () => await AddDevotionAsync(Devotions))"
+                                     Devotion="Devotions"/>
+</TemplatedDialog>
+
+@code
+{
+
+}

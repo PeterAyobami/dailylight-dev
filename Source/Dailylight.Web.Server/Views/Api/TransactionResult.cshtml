@@ -1,0 +1,89 @@
+﻿@{
+    ViewData["Title"] = "Transaction Result";
+}
+@model TransactionResultDataModel
+<!--      ===============      -->
+<!-- Transaction Result View -->
+<!--      ===============      -->
+<!--If the transaction was not recognized...-->
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+@if (Model.Status == TransactionStatus.NotRecognized)
+{
+    <div class="icon-transaction-result">
+        <img src="Assets/Images/icon-unrecognized.png">
+    </div>
+
+    <section class="one-centered-column">
+        <div>
+            <div>
+                <div>
+                    <div class="container no-top-padding">
+                        <h1>Transaction Unrecognized</h1>
+                        <p>
+                            This transaction is not recognized. Please try making a valid transaction.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<!--If the transaction has failed-->
+@if (Model.Status == TransactionStatus.Failed)
+{
+    <div class="icon-transaction-result">
+        <img src="Assets/Images/icon-failure.png">
+    </div>
+
+    <section class="one-centered-column">
+        <div>
+            <div>
+                <div>
+                    <div class="container no-top-padding">
+                        <h1>@Model.TransactionMessage</h1>
+                        <p>
+                            For further support, forward a complain to
+                            <a href="mailto:dailylightmedia.tac@gmail.com?subject=Complaint On A Failed Payment Transaction">
+                                Daily Light Media.
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@if (Model.Status == TransactionStatus.Successful)
+{
+    <div class="icon-transaction-result">
+        <img src="Assets/Images/icon-success.png">
+    </div>
+
+    <section class="one-centered-column">
+        <div>
+            <div>
+                <div>
+                    <div class="container no-top-padding">
+                        <h1>Transaction Successful</h1>
+                        <p>
+                            Your purchase was successful.
+                            <br>
+                            <strong>
+                                Try downloading the same
+                                dailylight edition you've purchased to get started.
+                            </strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

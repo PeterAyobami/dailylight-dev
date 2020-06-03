@@ -1,0 +1,15 @@
+﻿@namespace Dailylight.Web.Server.Admin
+
+<div class="loader-container @(IsLoading ? "show-page-loader" : null)">
+    <div id="loader-wrapper" style="background: rgba(255, 255, 255, 0.6)">
+        <div id="loader"></div>
+    </div>
+</div>
+
+@code
+{
+    /// <summary>
+    /// Flag indicating that spinner should roll or not
+    /// </summary>
+    [Parameter] public bool IsLoading { get; set; }
+}

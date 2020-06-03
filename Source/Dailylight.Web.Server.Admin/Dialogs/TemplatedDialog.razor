@@ -1,0 +1,16 @@
+@namespace Dailylight.Web.Server.Admin
+
+@if (Show)
+{
+    <div class="dialog-container">
+        <div class="dialog" style="max-width:@Length">
+            @ChildContent
+        </div>
+    </div>
+}
+
+@functions {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public bool Show { get; set; }
+    [Parameter] public string Length { get; set; }
+}

@@ -1,0 +1,11 @@
+﻿<!-- Spinner -->
+<div class="@(IsFadedOut ? null : "hide")">
+    <div id="loader-wrapper" style="background: rgba(255, 255, 255, 0.6)">
+        <div id="loader"></div>
+    </div>
+</div>
+
+@functions
+{
+    [Parameter] public bool IsFadedOut { get; set; } = false;
+}

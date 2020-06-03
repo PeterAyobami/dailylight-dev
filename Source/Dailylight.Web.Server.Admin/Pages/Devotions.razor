@@ -1,0 +1,140 @@
+﻿@page "/devotions"
+@namespace Dailylight.Web.Server.Admin
+@inherits DevotionReviewPageViewModel
+@attribute [Authorize]
+@using System.Threading.Tasks
+@using Dailylight.Server.Core
+@using Microsoft.EntityFrameworkCore
+
+    <div class="static-page">
+        <PageHeader Title="Devotions"
+                    HasCommand="true"
+                    OnCommandInvoke="@(() => NavigationManager.NavigateTo("/devotion-entry"))"
+                    CommandTitle="New Devotion"
+                    HasUserNotification="false"
+                    HasAppNotification="false"
+                    HasMargin="false" />
+
+        <!-- Feedback messages -->
+
+        <!--Devotion deetion successful flash message-->
+        <FlashMessage Show="mShowingDevotionDeletionSuccessfulFlashMessage"
+                      IsFloated="true"
+                      Message="Devotion successfully deleted"
+                      AlertType="@FlashMessageThemeInfo.SuccsesAlert"
+                      AlertTypeIcon="@FlashMessageThemeInfo.SuccsesAlertIcon"
+                      Length="@FlashMessageThemeInfo.OneHalf"
+                      OnClose="@(() => OnFlashMessageClosed())"/>
+
+        <!--Devotion deletion failed flash message-->
+        <FlashMessage Show="mShowingDevotionDeletionFailedFlashMessage"
+                      IsFloated="true"
+                      Message="Failed to delete devotion"
+                      AlertType="@FlashMessageThemeInfo.ErrorAlert"
+                      AlertTypeIcon="@FlashMessageThemeInfo.ErrorAlertIcon"
+                      Length="@FlashMessageThemeInfo.OneHalf"
+                      OnClose="@(() => OnFlashMessageClosed())"/>
+
+        <div class="container-fluid c-messanger">
+            <div class="row">
+                <div class="col-sm-4 u-p-zero">
+                    <div class="u-p-small u-border-bottom u-border-right">
+                        <div class="c-field has-icon-right">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <EditForm Model="@DevotionsViewModel" OnValidSubmit="@(() => FilterDevotionsByTitle(DevotionsViewModel))">
+                                        <InputText class="form-control" placeholder="Search" @bind-Value="@DevotionsViewModel.Title" />
+                                    </EditForm>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <select class="form-control" value="@DevotionsCategory.DevotionMonth" @onchange="@((ChangeEventArgs e) => HandleDevotionsFilter(e))">
+                                        <option value="All">All Devotions</option>
+                                        <option value="January 2020">January</option>
+                                        <option value="February 2020">February</option>
+                                        <option value="March 2020">March</option>
+                                        <option value="April 2020">April</option>
+                                        <option value="May 2020">May</option>
+                                        <option value="June 2020">June</option>
+                                        <option value="July 2020">July</option>
+                                        <option value="August 2020">August</option>
+                                        <option value="September 2020">September</option>
+                                        <option value="October 2020">October</option>
+                                        <option value="November 2020">November</option>
+                                        <option value="December 2020">December</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8 u-p-zero">
+                    <div class="u-height-100 u-flex u-align-items-center u-border-bottom">
+                        <h5 class="u-mb-zero u-ml-medium">Devotion Summary</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 u-p-zero customer-list-frame-contaianer">
+                    <div class="c-messages">
+                        <div class="sales-info-container js-scrollable">
+                            <div class="sales-info-grid-wrap">
+                                <div class="sales-info-grid" style="display: flex; flex-direction: column;">
+                                    <!-- Main content grid -->
+                                    <div class="sales-orders-list">
+                                        <div class="">
+                                            <!-- Item -->
+                                            <!-- TODO: Change list classes -->
+
+                                            @if (Devotions.Count == 0)
+                                            {
+                                                <div class=""><strong>There are no existing devotions...</strong></div>
+                                            }
+                                            else
+                                            {
+                                                @foreach (var devotion in Devotions)
+                                                {
+                                                    <UserList DataModel="devotion" OnClick="@(() => GetDevotion(devotion))" />
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-8 @(mShowingBlankContentPage ? "u-p-zero flex-layout" : "") customer-order-frame-contaianer section-wrapper" style="justify-content: center;">
+                    @if (mShowingBlankContentPage)
+                    {
+                        <div class="center-content"><strong>Please select a devotion... <br> or <br> <a @onclick="@(() => NavigationManager.NavigateTo("/devotion-entry"))">Add New</a></strong></div>
+                    }
+                    else
+                    {
+                        <UserOrderInfo Devotion="@Devotion"
+                                       OnModify="@(() => ShowDevotionModifyDialog(Devotion))"
+                                       OnDelete="@(() => DeleteDevotion(Devotion))" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--Dialogs-->
+
+<!--
+ Dialog-->
+<TemplatedDialog Show="mShowingModifyDevotionDialog"
+                 Length="@DialogThemeInfo.StandardLength">
+    <ModifyDevotionDialog Id="@Devotion.Id"
+                          OnConfirm="@(() => ModifyDevotion(Devotion))"
+                          OnCancel="@(() => mShowingModifyDevotionDialog = false)"
+                          IsRunning="mDevotionUpdateIsRunning"/>
+</TemplatedDialog>
+
+@code
+{
+    private string mNullClass;
+}

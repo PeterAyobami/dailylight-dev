@@ -1,15 +1,30 @@
-﻿@inherits LayoutComponentBase
+﻿@namespace Dailylight.Web.Server.Admin
+@using Dailylight.Server.Core
+@inherits LayoutComponentBase
+@inject ApplicationDbContext Context
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject RoleManager<IdentityRole> RoleManager
+@using Dna
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+<NavMenu />
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/en-us/aspnet/" target="_blank">About</a>
-    </div>
+<AuthorizeView>
+    <Authorized>
+        <main class="o-page__content">
+            @Body
+        </main>
+    </Authorized>
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
+    <NotAuthorized>
+        <main class="a-page__content">
+            @Body
+        </main>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code
+{
+}

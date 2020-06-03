@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="en-NG">
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <title>@ViewData["Title"] | Daily Light Media</title>
+    <link href="Assets/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="Assets/Css/style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="Assets/Js/dna.core.js"></script>
+    <script type="text/javascript" src="Assets/Js/dna.scroll.core.js"></script>
+    <script type="text/javascript" src="Assets/Js/dna.delay.js"></script>
+    <script type="text/javascript" src="Assets/Js/dna.scroll.scrolldown.js"></script>
+    <script type="text/javascript" src="Assets/Js/dna.scroll.parallax.js"></script>
+    <script type="text/javascript" src="Assets/Js/dna.scroll.animatein.js"></script>
+    <script type="text/javascript" src="Assets/Js/dna.topmenu.js"></script>
+    <script type="text/javascript" src="Assets/Js/dna.particles.js"></script>
+</head>
+
+<body>
+    <main>
+        <!-- Top Navigation Menu -->
+        <nav class="top-menu-standard slide-in-down" data-scrolldown-class="reduced">
+
+            <!-- Top Menu Contents -->
+            <div>
+
+                <!-- Logo -->
+                <div class="menu-logo">
+                    <a href="/">
+                        <img src="Assets/Images/logo.png" />
+                    </a>
+                </div>
+
+                <!-- Menu Icon -->
+                <div class="menu-icon">
+                    <a href="#topmenu" data-toggle-class="expanded">
+                        <i class="ion-navicon-round"></i>
+                    </a>
+                </div>
+
+                <!-- Menu items -->
+                <ul data-topmenu-class="expanded">
+                    <li>
+                        <a href="#">About</a>
+                    </li>
+                    <li>
+                        <a href="/dailylight/apk/download">Download</a>
+                    </li>
+                    <li>
+                        <a href="#">Contact</a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </nav>
+
+        @RenderBody()
+
+        <footer>
+            <nav class="grid footer-menu">
+                <div class="col one-third below-lap-one-whole">
+                    <div class="footer-logo">
+                        <center>
+                            <img src="Assets/Images/footer-logo.png" alt="">
+                        </center>
+                    </div>
+                </div>
+
+            </nav>
+
+            <div class="grid">
+                <div class="col copyright one-whole below-lap-one-whole">
+                    <span> &copy; 2020 Daily Light Media. All rights reserved</span>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+</body>
+
+</html>

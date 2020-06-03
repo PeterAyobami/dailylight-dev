@@ -1,0 +1,30 @@
+﻿@namespace Dailylight.Web.Server.Admin
+
+<button class="form-control" type="submit"><span class="@(IsRunning ? "hide-btn-title" : null)">@ButtonTitle</span> <i class="@(IsRunning ? "ion-load-a" : null)"></i></button>
+@code
+{
+    /// <summary>
+    /// Flag indicating an ongoing operation
+    /// </summary>
+    [Parameter] public bool IsRunning { get; set; }
+
+    /// <summary>
+    /// Flag indicating type of button
+    /// </summary>
+    [Parameter] public bool IsBtnPrimary { get; set; }
+
+    /// <summary>
+    /// Flag indicating if component will listen to a command event
+    /// </summary>
+    [Parameter] public bool HasCommand { get; set; }
+
+    /// <summary>
+    /// The event call back event action
+    /// </summary>
+    [Parameter] public EventCallback OnCommandInvoke { get; set; }
+
+    /// <summary>
+    /// The button title text
+    /// </summary>
+    [Parameter] public string ButtonTitle { get; set; }
+}
