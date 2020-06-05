@@ -74,7 +74,7 @@ namespace Dailylight.Web.Server
                 if (errorResponse.Errors == null || errorResponse.Errors.Count == 0)
                     // Add an unknown error
                     // TODO: Localization
-                    errorResponse.Errors = new List<string>(new[] { "Unknown error from email sending service. Please contact Fasetto support." });
+                    errorResponse.Errors = new List<string>(new[] { "Unknown error from email sending service. Please contact Daily Light support." });
 
                 // Return the response
                 return errorResponse;

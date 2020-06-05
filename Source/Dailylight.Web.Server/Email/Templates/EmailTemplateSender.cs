@@ -15,15 +15,9 @@ namespace Dailylight.Web.Server
         {
             var templateText = default(string);
 
-            var entry = Assembly.GetEntryAssembly();
-
-            var stream = entry.GetManifestResourceStream("Dailylight.Web.Server.Email.Templates.GeneralTemplate.htm");
-
-            var a = Assembly.GetEntryAssembly().GetManifestResourceStream("Dailylight.Web.Server.Email.Templates.GeneralTemplate.htm");
-
             // Read the general template from file
             // TODO: Replace with IoC Flat data provider
-            using (var reader = new StreamReader(a, Encoding.UTF8))
+            using (var reader = new StreamReader(Assembly.GetEntryAssembly().GetManifestResourceStream("Dailylight.Web.Server.Email.Templates.GeneralTemplate.htm"), Encoding.UTF8))
             {
                 // Read file contents
                 templateText = await reader.ReadToEndAsync();

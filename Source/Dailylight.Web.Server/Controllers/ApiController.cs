@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using static Dna.FrameworkDI;
 
 namespace Dailylight.Web.Server
@@ -570,22 +571,6 @@ namespace Dailylight.Web.Server
             }
         }
 
-        [AllowAnonymous]
-        [Route("api/email/reset-password")]
-        public async Task<IActionResult> SendEmailAsync()
-        {
-            try
-            {
-                await DailylightEmailSender.SendPasswordResetLinkEmailAsync("Peter Ayobami", "m.peter.ayobami@gmail.com", "http://dailylight.media");
-
-                return Ok(Content("Email Sent!"));
-            }
-            catch (Exception ex)
-            {
-                return Content($"{ex.Message}");
-            }
-        }
-
 
         /// <summary>
         /// The endpoint for payments verification
@@ -656,5 +641,141 @@ namespace Dailylight.Web.Server
         }
 
         #endregion
+
+
+        #region Password Reset
+
+        /// <summary>
+        /// The endpoint for password reset requests
+        /// </summary>
+        [AllowAnonymous]
+        [HttpPost]
+        [Route(ApiRoutes.PasswordResetRequest)]
+        public async Task<PasswordResetResponseApiModel> ResetPasswordRequestAsync([FromBody]ResetPasswordUserCredentialsViewModel userCredentials)
+        {
+            // Get the user
+            var user = await mUserManager.FindByEmailAsync(userCredentials.Email);
+
+            // If user was not found...
+            if (user == null)
+                // Ignore sending reset password token
+                return new PasswordResetResponseApiModel();
+
+            // Otherwise...
+
+            // Try sending the password reset token
+            try
+            {
+                await SendPasswordResetEmailAsync(user);
+
+                // Return the response
+                return new PasswordResetResponseApiModel
+                {
+                    ErrorMessage = null
+                };
+            }
+            catch (Exception ex)
+            {
+                // Return the response with exception message
+                return new PasswordResetResponseApiModel
+                {
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
+
+        /// <summary>
+        /// The endpoint for password reset token confirmation
+        /// </summary>
+        [AllowAnonymous]
+        [Route(ApiRoutes.PasswordResetConfirmation)]
+        public async Task<IActionResult> ResetPasswordTokenConfirmationAsync(string userId, string resetToken)
+        {
+            // Get the user
+            var user = await mUserManager.FindByIdAsync(userId);
+
+            // If the user is null
+            if (user == null)
+                // TODO: Nice UI
+                return Content("User not found");
+
+            // If we have the user...
+
+            // Load the reset password view
+            return View(new PasswordResetViewModel 
+            {
+                UserId = userId,
+                PasswordResetToken = resetToken
+            });
+        }
+
+        /// <summary>
+        /// The endpoint for password reset token confirmation
+        /// </summary>
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPasswordAsync([FromForm]PasswordResetViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+                return View("Error");
+
+            // Get the user
+            var user = await mUserManager.FindByIdAsync(viewModel.UserId);
+
+            // If the user is null
+            if (user == null)
+                // TODO: Nice UI
+                return Content("User not found");
+
+            // If we have the user...
+
+            // Reset the users password
+            var result = await mUserManager.ResetPasswordAsync(
+                user, viewModel.PasswordResetToken, viewModel.NewPassword);
+
+            // If succeeded...
+            if (result.Succeeded)
+                // TODO: Nice UI
+                return Content("Password Reset was Successful :)");
+
+            // TODO: Nice UI
+            return Content("Invalid Password Reset Token :(");
+        }
+
+        #endregion
+
+
+        #region Private Helpers
+
+        /// <summary>
+        /// Sends the given user a password reset token email
+        /// </summary>
+        /// <param name="user">The specified user</param>
+        private async Task SendPasswordResetEmailAsync(ApplicationUser user)
+        {
+            // Get the user details
+            var userIdentity = await mUserManager.FindByNameAsync(user.UserName);
+
+            // Generate an email verification code
+            var passwordResetToken = await mUserManager.GeneratePasswordResetTokenAsync(user);
+
+            // TODO: Replace with APIRoutes that will contain the static routes to use
+            var resetUrl = $"http://{Request.Host.Value}/{ApiRoutes.PasswordResetConfirmation}/?userId={HttpUtility.UrlEncode(userIdentity.Id)}&resetToken={HttpUtility.UrlEncode(passwordResetToken)}";
+
+            // Email the user the verification code
+            await DailylightEmailSender.SendPasswordResetLinkEmailAsync(user.UserName, userIdentity.Email, resetUrl);
+        }
+
+        #endregion
+
+        //[AllowAnonymous]
+        //[Route("/passwordreset")]
+        //public IActionResult PasswordReset()
+        //{
+        //    return View(new PasswordResetViewModel
+        //    {
+        //        UserId = "sjsks9212akq991jka91910nakakq91",
+        //        PasswordResetToken = "siaaiaiq19119101029291kak"
+        //    });
+        //}
     }
 }

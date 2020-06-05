@@ -76,5 +76,24 @@
         public const string VerifyPayment = "api/payment/verify";
 
         #endregion
+
+        #region Password Reset
+
+        /// <summary>
+        /// The route to the password reset request endpoint
+        /// </summary>
+        public const string PasswordResetRequest = "api/password/reset";
+
+        /// <summary>
+        /// The route to the password reset confirmation endpoint
+        /// </summary>
+        public const string PasswordResetConfirmation = "apipasswordresetconfirm";
+
+        /// <summary>
+        /// The route to the password reset endpoint
+        /// </summary>
+        public const string ResetPassword = "api/password/reset";
+
+        #endregion
     }
 }

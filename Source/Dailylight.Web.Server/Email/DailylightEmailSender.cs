@@ -54,9 +54,10 @@ namespace Dailylight.Web.Server
                 Subject = "Reset Your Password - Daily Light Media"
             },
             "Reset Your Password",
-            $"Hi {displayName ?? "user"},",
-            "We received a request to reset your password.<br/>If you didn't request for this, please ignore.",
-            "Reset Password",
+            $"Hi {displayName},",
+            "You have requested to reset the password to your account on Daily Light Media. Click the link below to get started.<br/><br/>" +
+            "PS: If you did not initiate this request, kindly ignore this email",
+            "RESET MY PASSWORD",
             passwordResetLink);
         }
     }
